@@ -13,7 +13,7 @@ import os, sys, importlib, inspect, json
 from .exceptions import *
 from .utils.jinja import get_jenv, get_template, render_template
 
-__version__ = '7.2.31'
+__version__ = '7.2.15'
 __title__ = "Frappe Framework"
 
 local = Local()
@@ -42,17 +42,13 @@ def _(msg, lang=None):
 	"""Returns translated string in current lang, if exists."""
 	from frappe.translate import get_full_dict
 
-	if not hasattr(local, 'lang'):
-		local.lang = lang or 'en'
-
 	if not lang:
 		lang = local.lang
 
 	# msg should always be unicode
 	msg = as_unicode(msg).strip()
 
-	# return lang_full_dict according to lang passed parameter
-	return get_full_dict(lang).get(msg) or msg
+	return get_full_dict(local.lang).get(msg) or msg
 
 def as_unicode(text, encoding='utf-8'):
 	'''Convert to unicode if required'''
@@ -1163,7 +1159,7 @@ def format(*args, **kwargs):
 	import frappe.utils.formatters
 	return frappe.utils.formatters.format_value(*args, **kwargs)
 
-def get_print(doctype=None, name=None, print_format=None, style=None, html=None, as_pdf=False, doc=None, output = None):
+def get_print(doctype=None, name=None, print_format=None, style=None, html=None, as_pdf=False, doc=None, output = None, orientation="Portrait"):
 	"""Get Print Format for given document.
 
 	:param doctype: DocType of document.
@@ -1184,11 +1180,11 @@ def get_print(doctype=None, name=None, print_format=None, style=None, html=None,
 		html = build_page("print")
 
 	if as_pdf:
-		return get_pdf(html, output = output)
+		return get_pdf(html, options = {"orientation": orientation}, output = output) #orientation added
 	else:
 		return html
-
-def attach_print(doctype, name, file_name=None, print_format=None, style=None, html=None, doc=None):
+#argument is passed for Orientation(by default it will be Potrait)
+def attach_print(doctype, name, file_name=None, print_format=None, style=None, html=None, doc=None, orientation="Portrait"):
 	from frappe.utils import scrub_urls
 
 	if not file_name: file_name = name
@@ -1201,7 +1197,7 @@ def attach_print(doctype, name, file_name=None, print_format=None, style=None, h
 	if int(print_settings.send_print_as_pdf or 0):
 		out = {
 			"fname": file_name + ".pdf",
-			"fcontent": get_print(doctype, name, print_format=print_format, style=style, html=html, as_pdf=True, doc=doc)
+			"fcontent": get_print(doctype, name, print_format=print_format, style=style, html=html, as_pdf=True, doc=doc, orientation=orientation) #orientation added
 		}
 	else:
 		out = {

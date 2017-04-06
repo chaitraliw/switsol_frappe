@@ -175,7 +175,7 @@ frappe.ui.form.PrintPreview = Class.extend({
 	refresh_print_options: function() {
 		this.print_formats = frappe.meta.get_print_formats(this.frm.doctype);
 		return this.print_sel
-			.empty().add_options(this.print_formats);
+			.empty().add_options(__(this.print_formats));
 	},
 	with_old_style: function(opts) {
 		frappe.require("/assets/js/print_format_v3.min.js", function() {
