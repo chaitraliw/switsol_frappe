@@ -165,7 +165,6 @@ def load_doctype_module(doctype, module=None, prefix="", suffix=""):
 	key = (app, doctype, prefix, suffix)
 
 	module_name = get_module_name(doctype, module, prefix, suffix)
-
 	try:
 		if key not in doctype_python_modules:
 			doctype_python_modules[key] = frappe.get_module(module_name)
