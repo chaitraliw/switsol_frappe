@@ -44,7 +44,8 @@ class DropboxSettings(IntegrationService):
 		try:
 			self.get_dropbox_session()
 		except Exception, e:
-			frappe.throw(e.message)
+			pass
+			#frappe.throw(e.message)
 
 	def get_dropbox_session(self):
 		try:

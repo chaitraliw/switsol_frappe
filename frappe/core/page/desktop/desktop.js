@@ -172,6 +172,14 @@ $.extend(frappe.desktop, {
 		}
 	},
 
+	dispatchModuleChange: function(el) {
+		try {
+			$(frappe).trigger("moduleChangeEvent", frappe.get_module(el.attr("data-name")).label);
+		} catch(err) {
+			$(frappe).trigger("moduleChangeEvent", "Stock");
+		}
+	},
+
 	make_sortable: function() {
 		if (frappe.dom.is_touchscreen() || frappe.list_desktop) {
 			return;

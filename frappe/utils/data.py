@@ -788,3 +788,20 @@ def to_markdown(html):
 		pass
 
 	return text
+
+def get_percent_value(doc, total, percent, add_currency=False):
+	total_value = getattr(doc, total)
+	discount_value = getattr(doc, percent)
+	if total_value and discount_value:
+		value = flt(flt(total_value) * discount_value / 100, doc.precision(total))
+		value = fmt_money(value)
+		if add_currency:
+			symbol = frappe.db.get_value("Currency", doc.currency, "symbol")
+			return '{} {}'.format(symbol, value)
+		return value
+	return ''
+
+def formattime(txt):
+	start_txt = str(txt).split(":")
+	new_txt = u":".join((start_txt[0], start_txt[1]))
+	return new_txt
